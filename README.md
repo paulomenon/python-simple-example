@@ -1,15 +1,17 @@
-```markdown
 # Python Simple Example
 
 This repository contains a simple Python project demonstrating basic programming concepts and functionalities. It serves as a practical example for beginners to understand Python syntax, structures, and standard libraries.
 
 ## Table of Contents
 
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+- [Python Simple Example](#python-simple-example)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [Acknowledgments](#acknowledgments)
 
 ## Features
 
