@@ -22,8 +22,9 @@ This repository contains a simple Python project demonstrating basic programming
 - Simple data structures (lists, dictionaries)
 - Spreadsheet to SQLite database conversion
 - PDF report generation from database data
+- Intermediate examples: algorithms, file I/O, ciphers, text games
 
-## Examples
+## Beginner Examples
 
 Each folder contains a self-contained example with its own README explaining how to run it.
 
@@ -43,6 +44,23 @@ Each folder contains a self-contained example with its own README explaining how
 | `match-choice-sample/` | Match/Case | Python 3.10+ structural pattern matching |
 | `game-samples/` | Mini Games | Loops, random numbers, user interaction |
 | `spreadsheet-sample/` | Spreadsheet to SQLite to PDF | File I/O, databases, PDF generation |
+
+## Intermediate Examples
+
+The `intermediate-level/` folder contains examples that build on the basics. Each subfolder is self-contained with its own README.
+
+| Folder | Example | What it covers |
+|---|---|---|
+| `intermediate-level/function-based-calculator/` | Function-Based Calculator | Functions, return values, dict-based dispatch |
+| `intermediate-level/word-count-analyzer/` | Word Count Analyzer | String methods, dictionaries, sorting |
+| `intermediate-level/palindrome-checker/` | Palindrome Checker | String slicing, reversal, input cleaning |
+| `intermediate-level/fibonacci-generator/` | Fibonacci Sequence Generator | Loops, sequences, list indexing |
+| `intermediate-level/number-base-converter/` | Number Base Converter | `bin()`, `hex()`, `int()` with base, validation |
+| `intermediate-level/caesar-cipher/` | Caesar Cipher Encoder/Decoder | `ord()`/`chr()`, modular arithmetic |
+| `intermediate-level/file-search-tool/` | Simple File Search Tool | `os.walk()`, directory traversal, file filtering |
+| `intermediate-level/todo-list/` | To-Do List (with file saving) | JSON file I/O, persistent data, CRUD operations |
+| `intermediate-level/text-adventure-game/` | Basic Text Adventure Game | Game state, dictionaries as data, input parsing |
+| `intermediate-level/email-slicer/` | Email Slicer | `split()`, `rsplit()`, input validation |
 
 ## Installation
 
