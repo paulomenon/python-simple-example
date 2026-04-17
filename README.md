@@ -114,6 +114,23 @@ python hello_world.py
 
 Each folder has its own README with instructions and expected output.
 
+## Running Tests
+
+A test runner script at the project root can execute all examples automatically and report pass/fail results.
+
+```bash
+python run_tests.py basic          # Beginner-level examples + spreadsheet sample
+python run_tests.py intermediate   # Intermediate-level examples
+python run_tests.py advanced       # Advanced-level examples
+python run_tests.py all            # Everything
+```
+
+Add `-v` for verbose output (shows each script's full output):
+
+```bash
+python run_tests.py all -v
+```
+
 ## Contributing
 
 Contributions are welcome! If you have suggestions for improvements or new features, feel free to create a pull request. Please ensure your code follows the project's style guidelines and includes appropriate tests.
