@@ -2,6 +2,10 @@
 """
 Automated test runner for python-simple-example.
 
+Dynamically discovers all .py scripts inside the level folders and runs them.
+Interactive scripts are fed input from a matching .input file if one exists
+(e.g. welcome.py looks for welcome.input in the same directory).
+
 Usage:
     python run_tests.py basic          # Run beginner-level examples
     python run_tests.py intermediate   # Run intermediate-level examples
@@ -20,85 +24,63 @@ import time
 REPO_ROOT = os.path.dirname(os.path.abspath(__file__))
 TIMEOUT = 15
 
-# Each entry: (display_name, script_path_relative_to_repo, stdin_input or None)
-# stdin_input feeds text to scripts that call input(), preventing hangs.
+LEVEL_DIRS = {
+    "basic": "beginner-level",
+    "intermediate": "intermediate-level",
+    "advanced": "advanced-level",
+}
 
-BASIC = [
-    ("Hello World",              "hello-world-sample/hello_world.py",              None),
-    ("Name Input Program",       "welcome-sample/welcome.py",                      "Tester\n"),
-    ("Simple Calculator",        "calculator-sample/simple_calculator.py",          "1\n10\n5\n"),
-    ("Even or Odd Checker",      "even-odd-sample/even_or_odd.py",                 "7\n"),
-    ("Age Checker",              "age-checker-sample/age_checker.py",              "Tester\n25\n"),
-    ("For Loop Counter",         "loop-samples/for_loop_sample.py",               None),
-    ("While Loop Counter",       "loop-samples/while_loop_sample.py",             None),
-    ("While Until Menu",         "loop-samples/while_until.py",                   "5\n"),
-    ("Multiplication Table",     "multiplication-table-sample/multiplication_table.py", "7\n"),
-    ("Temperature Converter",    "temperature-converter-sample/temperature_converter.py", "1\n100\n"),
-    ("Miles to Km",              "constant/convert_miles_to_km.py",               None),
-    ("Cm to Inches",             "constant/convert_cm_to_inches.py",              "100\n"),
-    ("Metric/Imperial",          "constant/convert_metric_imperial.py",           "1\n50\n"),
-    ("Simple Array",             "array-sample/simple_array.py",                  None),
-    ("Array Names",              "array-sample/array_names.py",                   "4\n"),
-    ("Array Numbers",            "array-sample/array_numbers.py",                 "6\n"),
-    ("Welcome Function",         "welcome-function/welcome_function.py",          "Tester\n"),
-    ("Calculate Area",           "welcome-function/calculate_area.py",            None),
-    ("Match/Case Menu",          "match-choice-sample/match_choice.py",           "5\n"),
-    ("Guess Number Game",        "game-samples/guess_number.py",                  "\n".join(str(i) for i in range(1, 101)) + "\n"),
-    ("Magic 8-Ball",             "game-samples/simple_magic8.py",                 "Will it work?\nno\n"),
-    ("Roulette Game",            "game-samples/simple_roulette.py",               "17\n"),
-]
-
-INTERMEDIATE = [
-    ("Function-Based Calculator",  "intermediate-level/function-based-calculator/calculator.py", "1\n10\n5\n7\n"),
-    ("Word Count Analyzer",        "intermediate-level/word-count-analyzer/word_count_analyzer.py", "The quick brown fox jumps over the lazy dog.\n\n"),
-    ("Palindrome Checker",         "intermediate-level/palindrome-checker/palindrome_checker.py", "racecar\nquit\n"),
-    ("Fibonacci Generator",        "intermediate-level/fibonacci-generator/fibonacci_generator.py", "10\n"),
-    ("Number Base Converter",      "intermediate-level/number-base-converter/base_converter.py", "1\n255\n"),
-    ("Caesar Cipher",              "intermediate-level/caesar-cipher/caesar_cipher.py", "1\nHello World\n3\n"),
-    ("File Search Tool",           "intermediate-level/file-search-tool/file_search.py", ".\n2\n.py\n"),
-    ("To-Do List",                 "intermediate-level/todo-list/todo_list.py", "2\nTest task\n1\n5\n"),
-    ("Text Adventure Game",        "intermediate-level/text-adventure-game/text_adventure.py", "quit\n"),
-    ("Email Slicer",               "intermediate-level/email-slicer/email_slicer.py", "user@example.com\nquit\n"),
-]
-
-ADVANCED = [
-    ("Recursive Merge Sort",       "advanced-level/recursive-merge-sort/merge_sort.py",        None),
-    ("Quick Sort",                 "advanced-level/quick-sort/quick_sort.py",                   None),
-    ("Depth-First Search",         "advanced-level/depth-first-search/dfs.py",                  None),
-    ("Breadth-First Search",       "advanced-level/breadth-first-search/bfs.py",                None),
-    ("Bubble Sort",                "advanced-level/bubble-sort/bubble_sort.py",                  None),
-    ("Hash Table",                 "advanced-level/hash-table/hash_table.py",                    None),
-    ("Binary Tree Traversal",      "advanced-level/binary-tree-traversal/binary_tree.py",        None),
-    ("Sudoku Solver",              "advanced-level/sudoku-solver/sudoku_solver.py",               None),
-]
-
-# These require network or external packages — listed separately so failures
-# are reported clearly rather than crashing the whole suite.
-ADVANCED_NETWORK = [
-    ("REST API Client",            "advanced-level/rest-api-client/api_client.py",                None),
-    ("Multithreaded Downloader",   "advanced-level/multithreaded-downloader/downloader.py",       None),
-]
-
-# Spreadsheet sample needs openpyxl/reportlab — skip in default basic run
-SPREADSHEET = [
-    ("Create Sample Spreadsheet",  "spreadsheet-sample/create_sample_spreadsheet.py",  None),
-    ("Spreadsheet to SQLite",      "spreadsheet-sample/spreadsheet_to_sqlite.py",      None),
-    ("SQLite to PDF Report",       "spreadsheet-sample/sqlite_to_pdf_report.py",       None),
-]
+SKIP_FILES = {"__init__.py"}
 
 
-def run_script(name, script_path, stdin_input, verbose):
-    """Run a single script and return (passed: bool, output: str)."""
-    full_path = os.path.join(REPO_ROOT, script_path)
+# Scan a level folder (e.g. beginner-level/) recursively and collect every .py
+# script it contains. For each script, check if a matching .input file exists
+# in the same directory — that file will be piped as stdin when the script runs.
+# Returns a list of tuples: (display_name, rel_path, abs_path, input_path_or_None).
+def discover_scripts(level_dir):
+    scripts = []
+    base = os.path.join(REPO_ROOT, level_dir)
 
-    if not os.path.exists(full_path):
+    if not os.path.isdir(base):
+        return scripts
+
+    for root, _dirs, files in os.walk(base):
+        py_files = sorted(f for f in files if f.endswith(".py") and f not in SKIP_FILES)
+        for py_file in py_files:
+            script_path = os.path.join(root, py_file)
+            rel_path = os.path.relpath(script_path, REPO_ROOT)
+
+            input_file = os.path.join(root, py_file.replace(".py", ".input"))
+            input_path = input_file if os.path.exists(input_file) else None
+
+            folder_name = os.path.relpath(root, base)
+            name = f"{folder_name}/{py_file}" if folder_name != "." else py_file
+
+            scripts.append((name, rel_path, script_path, input_path))
+
+    return scripts
+
+
+# Execute a single Python script as a subprocess. If an .input file was found
+# during discovery, its contents are fed to the script's stdin so interactive
+# scripts (ones that call input()) don't hang. The script runs inside its own
+# directory so relative file paths within the script work correctly. A timeout
+# guard kills scripts that take too long (e.g. infinite loops or missing input).
+# Returns a tuple: (passed: bool, captured_output: str).
+def run_script(script_path, input_path, verbose):
+    if not os.path.exists(script_path):
         return False, f"File not found: {script_path}"
 
-    working_dir = os.path.dirname(full_path)
+    stdin_input = None
+    if input_path:
+        with open(input_path, "r") as f:
+            stdin_input = f.read()
+
+    working_dir = os.path.dirname(script_path)
 
     try:
         result = subprocess.run(
-            [sys.executable, full_path],
+            [sys.executable, script_path],
             input=stdin_input,
             capture_output=True,
             text=True,
@@ -109,8 +91,7 @@ def run_script(name, script_path, stdin_input, verbose):
         if result.stderr:
             output += result.stderr
 
-        passed = result.returncode == 0
-        return passed, output.strip()
+        return result.returncode == 0, output.strip()
 
     except subprocess.TimeoutExpired:
         return False, f"Timed out after {TIMEOUT}s"
@@ -118,21 +99,26 @@ def run_script(name, script_path, stdin_input, verbose):
         return False, str(e)
 
 
-def run_suite(suite_name, tests, verbose):
-    """Run a list of tests and return (passed_count, failed_count, failed_names)."""
+# Run every script in a discovered list and print PASS/FAIL for each one.
+# In normal mode, only the result line is shown (plus the last error line on
+# failure). In verbose mode (-v), the full stdout/stderr of every script is
+# printed so you can see exactly what each example produced.
+# Returns totals: (passed_count, failed_count, list_of_failed_names).
+def run_suite(suite_name, scripts, verbose):
     passed = 0
     failed = 0
     failed_names = []
 
     print(f"\n{'=' * 50}")
-    print(f"  {suite_name}")
+    print(f"  {suite_name} ({len(scripts)} scripts)")
     print(f"{'=' * 50}")
 
-    for name, script_path, stdin_input in tests:
+    for name, rel_path, script_path, input_path in scripts:
         if verbose:
-            print(f"\n--- Running: {name} ({script_path}) ---")
+            has_input = " (with .input)" if input_path else ""
+            print(f"\n--- Running: {name}{has_input} ---")
 
-        ok, output = run_script(name, script_path, stdin_input, verbose)
+        ok, output = run_script(script_path, input_path, verbose)
 
         if ok:
             passed += 1
@@ -148,13 +134,15 @@ def run_suite(suite_name, tests, verbose):
                 for line in output.split("\n"):
                     print(f"        {line}")
             elif not verbose and output:
-                # Show first line of error even in quiet mode
                 first_line = output.split("\n")[-1][:80]
                 print(f"        {first_line}")
 
     return passed, failed, failed_names
 
 
+# Entry point: parse CLI arguments (level and verbose flag), resolve which
+# level folders to scan, discover scripts in each, run them all, and print
+# a final summary. Exits with code 0 if everything passed, 1 if any failed.
 def main():
     parser = argparse.ArgumentParser(
         description="Run automated tests for python-simple-example",
@@ -176,21 +164,21 @@ def main():
     total_failed = 0
     all_failed = []
 
-    suites = []
+    if args.level == "all":
+        levels = ["basic", "intermediate", "advanced"]
+    else:
+        levels = [args.level]
 
-    if args.level in ("basic", "all"):
-        suites.append(("Beginner Level", BASIC))
-        suites.append(("Spreadsheet Sample", SPREADSHEET))
+    for level in levels:
+        level_dir = LEVEL_DIRS[level]
+        display_name = level_dir.replace("-", " ").title()
+        scripts = discover_scripts(level_dir)
 
-    if args.level in ("intermediate", "all"):
-        suites.append(("Intermediate Level", INTERMEDIATE))
+        if not scripts:
+            print(f"\n  No scripts found in {level_dir}/")
+            continue
 
-    if args.level in ("advanced", "all"):
-        suites.append(("Advanced Level", ADVANCED))
-        suites.append(("Advanced Level (Network)", ADVANCED_NETWORK))
-
-    for suite_name, tests in suites:
-        p, f, names = run_suite(suite_name, tests, args.verbose)
+        p, f, names = run_suite(display_name, scripts, args.verbose)
         total_passed += p
         total_failed += f
         all_failed.extend(names)

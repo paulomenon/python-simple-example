@@ -27,24 +27,24 @@ This repository contains a simple Python project demonstrating basic programming
 
 ## Beginner Examples
 
-Each folder contains a self-contained example with its own README explaining how to run it.
+The `beginner-level/` folder contains introductory examples. Each subfolder is self-contained with its own README.
 
 | Folder | Example | What it covers |
 |---|---|---|
-| `hello-world-sample/` | Hello World | `print()`, basic script structure |
-| `welcome-sample/` | Name Input Program | `input()`, string concatenation |
-| `calculator-sample/` | Simple Calculator | User input, `if/elif/else`, arithmetic, division by zero |
-| `even-odd-sample/` | Even or Odd Checker | Modulo operator (`%`), conditionals |
-| `age-checker-sample/` | Age Checker | Chained conditionals, comparison operators, f-strings |
-| `loop-samples/` | Basic For Loop Counter | `for` loop, `range()`, patterns |
-| `multiplication-table-sample/` | Multiplication Table | `for` loop, string formatting, arithmetic in loops |
-| `temperature-converter-sample/` | Temperature Converter | Math formulas, float formatting, multiple conversions |
-| `constant/` | Unit Converters | Constants, functions, miles/km, cm/inches |
-| `array-sample/` | Arrays and Lists | Lists, iteration, basic data structures |
-| `welcome-function/` | Functions | Defining and calling functions, return values |
-| `match-choice-sample/` | Match/Case | Python 3.10+ structural pattern matching |
-| `game-samples/` | Mini Games | Loops, random numbers, user interaction |
-| `spreadsheet-sample/` | Spreadsheet to SQLite to PDF | File I/O, databases, PDF generation |
+| `beginner-level/hello-world-sample/` | Hello World | `print()`, basic script structure |
+| `beginner-level/welcome-sample/` | Name Input Program | `input()`, string concatenation |
+| `beginner-level/calculator-sample/` | Simple Calculator | User input, `if/elif/else`, arithmetic, division by zero |
+| `beginner-level/even-odd-sample/` | Even or Odd Checker | Modulo operator (`%`), conditionals |
+| `beginner-level/age-checker-sample/` | Age Checker | Chained conditionals, comparison operators, f-strings |
+| `beginner-level/loop-samples/` | Loop Counters | `for` loop, `while` loop, `range()`, patterns |
+| `beginner-level/multiplication-table-sample/` | Multiplication Table | `for` loop, string formatting, arithmetic in loops |
+| `beginner-level/temperature-converter-sample/` | Temperature Converter | Math formulas, float formatting, multiple conversions |
+| `beginner-level/constant/` | Unit Converters | Constants, functions, miles/km, cm/inches |
+| `beginner-level/array-sample/` | Arrays and Lists | Lists, iteration, basic data structures |
+| `beginner-level/welcome-function/` | Functions | Defining and calling functions, return values |
+| `beginner-level/match-choice-sample/` | Match/Case | Python 3.10+ structural pattern matching |
+| `beginner-level/game-samples/` | Mini Games | Loops, random numbers, user interaction |
+| `beginner-level/spreadsheet-sample/` | Spreadsheet to SQLite to PDF | File I/O, databases, PDF generation |
 
 ## Intermediate Examples
 
@@ -108,7 +108,7 @@ To set up the project locally, follow these steps:
 Navigate into any example folder and run the script:
 
 ```bash
-cd hello-world-sample
+cd beginner-level/hello-world-sample
 python hello_world.py
 ```
 
@@ -116,12 +116,12 @@ Each folder has its own README with instructions and expected output.
 
 ## Running Tests
 
-A test runner script at the project root can execute all examples automatically and report pass/fail results.
+The test runner automatically discovers all `.py` scripts inside each level folder and runs them. Interactive scripts are fed input from a matching `.input` file (e.g. `welcome.py` reads from `welcome.input`).
 
 ```bash
-python run_tests.py basic          # Beginner-level examples + spreadsheet sample
-python run_tests.py intermediate   # Intermediate-level examples
-python run_tests.py advanced       # Advanced-level examples
+python run_tests.py basic          # beginner-level/
+python run_tests.py intermediate   # intermediate-level/
+python run_tests.py advanced       # advanced-level/
 python run_tests.py all            # Everything
 ```
 
@@ -130,6 +130,8 @@ Add `-v` for verbose output (shows each script's full output):
 ```bash
 python run_tests.py all -v
 ```
+
+To add a new example, just create a folder with a `.py` script inside the appropriate level directory. If the script needs user input, add a `.input` file with the same name (e.g. `my_script.py` → `my_script.input`). The test runner will pick it up automatically.
 
 ## Contributing
 
