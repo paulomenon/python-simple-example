@@ -20,6 +20,8 @@ This repository contains a simple Python project demonstrating basic programming
 - Exception handling
 - Input and output operations
 - Simple data structures (lists, dictionaries)
+- Spreadsheet to SQLite database conversion
+- PDF report generation from database data
 
 ## Installation
 
@@ -53,6 +55,82 @@ python main.py
 ```
 
 Make sure to replace `main.py` with the appropriate script name if it differs.
+
+## Spreadsheet Sample
+
+The `spreadsheet-sample/` folder demonstrates how to read an Excel spreadsheet, save the data into a SQLite database, and export a PDF report. It contains three scripts that run in sequence.
+
+### Install dependencies
+
+```bash
+pip install -r spreadsheet-sample/requirements.txt
+```
+
+### Step 1: Create a sample spreadsheet
+
+Generates an `employees.xlsx` file with 10 sample rows (id, name, department, salary, start_date):
+
+```bash
+cd spreadsheet-sample
+python create_sample_spreadsheet.py
+```
+
+You can also use your own `.xlsx` file instead.
+
+### Step 2: Import the spreadsheet into SQLite
+
+Reads the Excel file, detects column types automatically, creates a matching SQLite table, and inserts all rows:
+
+```bash
+python spreadsheet_to_sqlite.py
+```
+
+This creates a `data.db` file with an `employees` table. The script prints the generated SQL so you can see exactly what it does:
+
+```
+Generated SQL:
+CREATE TABLE IF NOT EXISTS employees (
+    id INTEGER,
+    name TEXT,
+    department TEXT,
+    salary INTEGER,
+    start_date TEXT
+);
+
+Inserted 10 row(s) into 'employees'.
+```
+
+You can point it at any spreadsheet and database:
+
+```bash
+python spreadsheet_to_sqlite.py --file my_data.xlsx --db my_database.db
+```
+
+### Step 3: Export a PDF report from the database
+
+Reads the data back from SQLite and generates a formatted PDF report with a summary and data table:
+
+```bash
+python sqlite_to_pdf_report.py
+```
+
+This creates a `report.pdf` with:
+- A title and timestamp
+- Summary statistics (row count, min/max/avg for numeric columns)
+- A formatted table with all rows and alternating row colors
+
+You can customize the table and output path:
+
+```bash
+python sqlite_to_pdf_report.py --db my_database.db --table employees --output my_report.pdf
+```
+
+### Run all three steps at once
+
+```bash
+cd spreadsheet-sample
+python create_sample_spreadsheet.py && python spreadsheet_to_sqlite.py && python sqlite_to_pdf_report.py
+```
 
 ## Contributing
 
