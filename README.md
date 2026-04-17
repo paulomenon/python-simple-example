@@ -27,24 +27,24 @@ This repository contains a simple Python project demonstrating basic programming
 
 ## Beginner Examples
 
-Each folder contains a self-contained example with its own README explaining how to run it.
+The `beginner-level/` folder contains introductory examples. Each subfolder is self-contained with its own README.
 
 | Folder | Example | What it covers |
 |---|---|---|
-| `hello-world-sample/` | Hello World | `print()`, basic script structure |
-| `welcome-sample/` | Name Input Program | `input()`, string concatenation |
-| `calculator-sample/` | Simple Calculator | User input, `if/elif/else`, arithmetic, division by zero |
-| `even-odd-sample/` | Even or Odd Checker | Modulo operator (`%`), conditionals |
-| `age-checker-sample/` | Age Checker | Chained conditionals, comparison operators, f-strings |
-| `loop-samples/` | Basic For Loop Counter | `for` loop, `range()`, patterns |
-| `multiplication-table-sample/` | Multiplication Table | `for` loop, string formatting, arithmetic in loops |
-| `temperature-converter-sample/` | Temperature Converter | Math formulas, float formatting, multiple conversions |
-| `constant/` | Unit Converters | Constants, functions, miles/km, cm/inches |
-| `array-sample/` | Arrays and Lists | Lists, iteration, basic data structures |
-| `welcome-function/` | Functions | Defining and calling functions, return values |
-| `match-choice-sample/` | Match/Case | Python 3.10+ structural pattern matching |
-| `game-samples/` | Mini Games | Loops, random numbers, user interaction |
-| `spreadsheet-sample/` | Spreadsheet to SQLite to PDF | File I/O, databases, PDF generation |
+| `beginner-level/hello-world-sample/` | Hello World | `print()`, basic script structure |
+| `beginner-level/welcome-sample/` | Name Input Program | `input()`, string concatenation |
+| `beginner-level/calculator-sample/` | Simple Calculator | User input, `if/elif/else`, arithmetic, division by zero |
+| `beginner-level/even-odd-sample/` | Even or Odd Checker | Modulo operator (`%`), conditionals |
+| `beginner-level/age-checker-sample/` | Age Checker | Chained conditionals, comparison operators, f-strings |
+| `beginner-level/loop-samples/` | Loop Counters | `for` loop, `while` loop, `range()`, patterns |
+| `beginner-level/multiplication-table-sample/` | Multiplication Table | `for` loop, string formatting, arithmetic in loops |
+| `beginner-level/temperature-converter-sample/` | Temperature Converter | Math formulas, float formatting, multiple conversions |
+| `beginner-level/constant/` | Unit Converters | Constants, functions, miles/km, cm/inches |
+| `beginner-level/array-sample/` | Arrays and Lists | Lists, iteration, basic data structures |
+| `beginner-level/welcome-function/` | Functions | Defining and calling functions, return values |
+| `beginner-level/match-choice-sample/` | Match/Case | Python 3.10+ structural pattern matching |
+| `beginner-level/game-samples/` | Mini Games | Loops, random numbers, user interaction |
+| `beginner-level/spreadsheet-sample/` | Spreadsheet to SQLite to PDF | File I/O, databases, PDF generation |
 
 ## Intermediate Examples
 
@@ -108,87 +108,30 @@ To set up the project locally, follow these steps:
 Navigate into any example folder and run the script:
 
 ```bash
-cd hello-world-sample
+cd beginner-level/hello-world-sample
 python hello_world.py
 ```
 
 Each folder has its own README with instructions and expected output.
 
-## Spreadsheet Sample
+## Running Tests
 
-The `spreadsheet-sample/` folder demonstrates how to read an Excel spreadsheet, save the data into a SQLite database, and export a PDF report. It contains three scripts that run in sequence.
-
-### Install dependencies
+The test runner automatically discovers all `.py` scripts inside each level folder and runs them. Interactive scripts are fed input from a matching `.input` file (e.g. `welcome.py` reads from `welcome.input`).
 
 ```bash
-pip install -r spreadsheet-sample/requirements.txt
+python run_tests.py basic          # beginner-level/
+python run_tests.py intermediate   # intermediate-level/
+python run_tests.py advanced       # advanced-level/
+python run_tests.py all            # Everything
 ```
 
-### Step 1: Create a sample spreadsheet
-
-Generates an `employees.xlsx` file with 10 sample rows (id, name, department, salary, start_date):
+Add `-v` for verbose output (shows each script's full output):
 
 ```bash
-cd spreadsheet-sample
-python create_sample_spreadsheet.py
+python run_tests.py all -v
 ```
 
-You can also use your own `.xlsx` file instead.
-
-### Step 2: Import the spreadsheet into SQLite
-
-Reads the Excel file, detects column types automatically, creates a matching SQLite table, and inserts all rows:
-
-```bash
-python spreadsheet_to_sqlite.py
-```
-
-This creates a `data.db` file with an `employees` table. The script prints the generated SQL so you can see exactly what it does:
-
-```
-Generated SQL:
-CREATE TABLE IF NOT EXISTS employees (
-    id INTEGER,
-    name TEXT,
-    department TEXT,
-    salary INTEGER,
-    start_date TEXT
-);
-
-Inserted 10 row(s) into 'employees'.
-```
-
-You can point it at any spreadsheet and database:
-
-```bash
-python spreadsheet_to_sqlite.py --file my_data.xlsx --db my_database.db
-```
-
-### Step 3: Export a PDF report from the database
-
-Reads the data back from SQLite and generates a formatted PDF report with a summary and data table:
-
-```bash
-python sqlite_to_pdf_report.py
-```
-
-This creates a `report.pdf` with:
-- A title and timestamp
-- Summary statistics (row count, min/max/avg for numeric columns)
-- A formatted table with all rows and alternating row colors
-
-You can customize the table and output path:
-
-```bash
-python sqlite_to_pdf_report.py --db my_database.db --table employees --output my_report.pdf
-```
-
-### Run all three steps at once
-
-```bash
-cd spreadsheet-sample
-python create_sample_spreadsheet.py && python spreadsheet_to_sqlite.py && python sqlite_to_pdf_report.py
-```
+To add a new example, just create a folder with a `.py` script inside the appropriate level directory. If the script needs user input, add a `.input` file with the same name (e.g. `my_script.py` → `my_script.input`). The test runner will pick it up automatically.
 
 ## Contributing
 
@@ -217,7 +160,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - Thanks to the Python community for the vast resources and libraries that make development easier.
 - Inspired by various Python tutorials and documentation.
-
-```
-
-Feel free to adjust sections as necessary based on your project’s specifics, especially in the **Features**, **Usage**, and **Contributing** sections. Let me know if you need any more help!
