@@ -23,6 +23,7 @@ This repository contains a simple Python project demonstrating basic programming
 - Spreadsheet to SQLite database conversion
 - PDF report generation from database data
 - Intermediate examples: algorithms, file I/O, ciphers, text games
+- Advanced examples: sorting algorithms, graph traversal, data structures, REST APIs, threading, backtracking
 
 ## Beginner Examples
 
@@ -61,6 +62,23 @@ The `intermediate-level/` folder contains examples that build on the basics. Eac
 | `intermediate-level/todo-list/` | To-Do List (with file saving) | JSON file I/O, persistent data, CRUD operations |
 | `intermediate-level/text-adventure-game/` | Basic Text Adventure Game | Game state, dictionaries as data, input parsing |
 | `intermediate-level/email-slicer/` | Email Slicer | `split()`, `rsplit()`, input validation |
+
+## Advanced Examples
+
+The `advanced-level/` folder covers algorithms, data structures, networking, concurrency, and backtracking. Each subfolder is self-contained with its own README.
+
+| Folder | Example | What it covers |
+|---|---|---|
+| `advanced-level/recursive-merge-sort/` | Recursive Merge Sort | Divide and conquer, recursion, merging sorted halves |
+| `advanced-level/quick-sort/` | Quick Sort Algorithm | Partitioning, pivot selection, in-place sorting |
+| `advanced-level/depth-first-search/` | Depth-First Search (DFS) | Graph traversal, stacks, recursion |
+| `advanced-level/breadth-first-search/` | Breadth-First Search (BFS) | Queues, shortest path, level-order |
+| `advanced-level/bubble-sort/` | Bubble Sort Algorithm | Nested loops, swapping, early exit optimization |
+| `advanced-level/hash-table/` | Hash Table Implementation | Hashing, collision chaining, auto-resize |
+| `advanced-level/binary-tree-traversal/` | Binary Tree Traversal | BST, in/pre/post-order, level-order |
+| `advanced-level/rest-api-client/` | REST API Client | HTTP requests, JSON parsing, error handling |
+| `advanced-level/multithreaded-downloader/` | Multithreaded Downloader | Threading, concurrent I/O, performance comparison |
+| `advanced-level/sudoku-solver/` | Sudoku Solver (Backtracking) | Backtracking, constraint satisfaction, recursion |
 
 ## Installation
 
