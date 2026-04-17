@@ -1,3 +1,4 @@
-*.xlsx
 *.db
 *.pdf
+# Allow the sample spreadsheet to be committed
+!employees.xlsx
