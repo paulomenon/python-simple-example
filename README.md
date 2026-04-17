@@ -23,6 +23,27 @@ This repository contains a simple Python project demonstrating basic programming
 - Spreadsheet to SQLite database conversion
 - PDF report generation from database data
 
+## Examples
+
+Each folder contains a self-contained example with its own README explaining how to run it.
+
+| Folder | Example | What it covers |
+|---|---|---|
+| `hello-world-sample/` | Hello World | `print()`, basic script structure |
+| `welcome-sample/` | Name Input Program | `input()`, string concatenation |
+| `calculator-sample/` | Simple Calculator | User input, `if/elif/else`, arithmetic, division by zero |
+| `even-odd-sample/` | Even or Odd Checker | Modulo operator (`%`), conditionals |
+| `age-checker-sample/` | Age Checker | Chained conditionals, comparison operators, f-strings |
+| `loop-samples/` | Basic For Loop Counter | `for` loop, `range()`, patterns |
+| `multiplication-table-sample/` | Multiplication Table | `for` loop, string formatting, arithmetic in loops |
+| `temperature-converter-sample/` | Temperature Converter | Math formulas, float formatting, multiple conversions |
+| `constant/` | Unit Converters | Constants, functions, miles/km, cm/inches |
+| `array-sample/` | Arrays and Lists | Lists, iteration, basic data structures |
+| `welcome-function/` | Functions | Defining and calling functions, return values |
+| `match-choice-sample/` | Match/Case | Python 3.10+ structural pattern matching |
+| `game-samples/` | Mini Games | Loops, random numbers, user interaction |
+| `spreadsheet-sample/` | Spreadsheet to SQLite to PDF | File I/O, databases, PDF generation |
+
 ## Installation
 
 To set up the project locally, follow these steps:
@@ -48,13 +69,14 @@ To set up the project locally, follow these steps:
 
 ## Usage
 
-To run the example script, execute the following command in your terminal:
+Navigate into any example folder and run the script:
 
 ```bash
-python main.py
+cd hello-world-sample
+python hello_world.py
 ```
 
-Make sure to replace `main.py` with the appropriate script name if it differs.
+Each folder has its own README with instructions and expected output.
 
 ## Spreadsheet Sample
 
